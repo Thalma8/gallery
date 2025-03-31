@@ -9,9 +9,9 @@
     "build": "npm install && npm audit fix"
   },
   "engines": {
-    "node": ">=18.16.0",
-    "npm": "Please use npm instead of yarn"
-  },
+  "node": "18.16.0",
+  "npm": ">=9.0.0"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
