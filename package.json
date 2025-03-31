@@ -1,15 +1,17 @@
 {
+  
   "name": "dark-room",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npm install && npm audit fix"
   },
   "engines": {
-  "node": ">=18.16.0"
-},
+    "node": ">=18.16.0",
+    "npm": "Please use npm instead of yarn"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
