@@ -1,8 +1,7 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const path = require('path');
-const config = require('./config'); // Changed from _config
+const config = require('./config');
 
 // Define routes
 const index = require('./routes/index');
@@ -11,13 +10,16 @@ const image = require('./routes/image');
 // Initialize the app
 const app = express();
 
-// Connect to MongoDB
-const mongoURI = process.env.NODE_ENV === 'test' 
-  ? config.mongoURI.test 
-  : config.mongoURI.development;
+// Connect to MongoDB (Updated for Render)
+const mongoURI = process.env.MONGODB_URI || 
+  (process.env.NODE_ENV === 'test' 
+    ? config.mongoURI.test 
+    : config.mongoURI.development);
 
-  mongoose.connect(mongoURI)
-
+mongoose.connect(mongoURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
 .then(() => console.log(`✅ Connected to MongoDB (${process.env.NODE_ENV || 'development'})`))
 .catch(err => {
   console.error('❌ MongoDB connection error:', err.message);
@@ -30,6 +32,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Debug middleware (helps verify requests in Render logs)
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
+  next();
+});
+
 // Routes
 app.use('/', index);
 app.use('/image', image);
@@ -37,15 +45,16 @@ app.use('/image', image);
 // Error handling
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send('Something broke!');
+  res.status(500).json({
+    error: 'Internal Server Error',
+    message: process.env.NODE_ENV === 'development' ? err.message : undefined
+  });
 });
 
-// Start server
-let PORT = process.env.PORT || 5000;
-if (process.env.NODE_ENV === 'production') {
-  PORT = process.env.PORT || 80;
-}
-
-app.listen(PORT, () => {
-  console.log(`🚀 Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+// Start server (CRITICAL FIX for Render)
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Server running in ${process.env.NODE_ENV || 'development'} mode`);
+  console.log(`   Access URLs: http://localhost:${PORT} (local)`);
+  console.log(`               http://0.0.0.0:${PORT} (network)`);
 });
