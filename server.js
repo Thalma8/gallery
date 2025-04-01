@@ -16,10 +16,8 @@ const mongoURI = process.env.NODE_ENV === 'test'
   ? config.mongoURI.test 
   : config.mongoURI.development;
 
-mongoose.connect(mongoURI, { 
-  useNewUrlParser: true, 
-  useUnifiedTopology: true 
-})
+  mongoose.connect(mongoURI)
+
 .then(() => console.log(`✅ Connected to MongoDB (${process.env.NODE_ENV || 'development'})`))
 .catch(err => {
   console.error('❌ MongoDB connection error:', err.message);

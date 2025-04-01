@@ -1,42 +1,59 @@
 pipeline {
     agent any
 
+    environment {
+        NODE_VERSION = "18"  // Use a compatible Node.js version
+    }
+
     stages {
-        // Checkout code from GitHub
-        stage('Checkout') {
+        stage('Checkout Code') {
             steps {
                 git branch: 'master', url: 'https://github.com/Thalma8/gallery'
             }
         }
 
-        // Install dependencies
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                script {
+                    sh 'npm install'
+                }
             }
         }
 
-        // Run tests (if you add them later)
-        stage('Test') {
+        stage('Build and Deploy') {
             steps {
-                sh 'npm test' // Will fail if no tests exist (optional)
+                script {
+                    sh 'node server.js &'
+                }
             }
         }
 
-        // Deploy to Render (via GitHub trigger)
-        stage('Deploy to Render') {
-            steps {
-                echo 'Render auto-deploys when changes are pushed to GitHub.'
-            }
+        // stage('Test Execution') {
+        //     steps {
+        //         script {
+        //             try {
+        //                 sh 'npm test'
+        //             } catch (Exception e) {
+        //                 mail to: 'thandiethalma@gmail.com',
+        //                      subject: 'Test Failed in Jenkins Pipeline',
+        //                      body: 'Tests have failed. Check Jenkins logs for details.'
+        //                 error('Tests failed. Stopping pipeline.')
+        //             }
+        //         }
+        //     }
+        // }
+
+        
+
+    stage('Deploy to Render') {
+     steps {
+        script {
+            sh '''
+            curl -X POST https://api.render.com/deploy/srv-cvl8is1r0fns738b33c0?key=d0Ye1qran6g
+            '''
         }
     }
+}
 
-    post {
-        success {
-            echo 'Pipeline succeeded! Check Render for deployment.'
-        }
-        failure {
-            echo 'Pipeline failed. Check logs.'
-        }
     }
 }

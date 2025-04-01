@@ -8,14 +8,16 @@ let Image = require('../models/images');
 
 
 
-router.get('/', (req,res)=>{
-    
-    Image.find({}, function(err, images){
-        // console.log(images)
-        if (err) console.log(err);
-        res.render('index',{images:images, msg: req.query.msg })
-    })
-})
+router.get('/', async (req, res) => {
+    try {
+        const images = await Image.find({});
+        res.render('index', { images: images, msg: req.query.msg });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Server Error");
+    }
+});
+
 
 router.post('/upload', (req, res)=>{
     upload(req,res, (err)=>{
