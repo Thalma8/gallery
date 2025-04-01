@@ -1,6 +1,9 @@
 pipeline {
     agent any
 
+    environment {
+        // You can define environment variables here if needed
+    }
 
     stages {
         stage('Checkout Code') {
@@ -12,6 +15,9 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 script {
+                    // Ensure that Node.js version 18.18.0 is installed and used
+                    sh 'nvm install 18.18.0'
+                    sh 'nvm use 18.18.0'
                     sh 'npm install'
                 }
             }
@@ -40,17 +46,14 @@ pipeline {
         //     }
         // }
 
-        
-
-    stage('Deploy to Render') {
-     steps {
-        script {
-            sh '''
-            curl -X POST https://api.render.com/deploy/srv-cvl8is1r0fns738b33c0?key=d0Ye1qran6g
-            '''
+        stage('Deploy to Render') {
+            steps {
+                script {
+                    sh '''
+                    curl -X POST https://api.render.com/deploy/srv-cvl8is1r0fns738b33c0?key=d0Ye1qran6g
+                    '''
+                }
+            }
         }
-    }
-}
-
     }
 }
