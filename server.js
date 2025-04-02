@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const path = require('path');
 const config = require('./config');
 
+
+
 // Define routes
 const index = require('./routes/index');
 const image = require('./routes/image');
@@ -51,12 +53,12 @@ app.use((err, req, res, next) => {
   });
 });
 
-console.log('Starting server setup...');
-const PORT = process.env.PORT || 3000;
-console.log(`Render PORT env: ${process.env.PORT}`);
 
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Server running in ${process.env.NODE_ENV || 'development'} mode`);
-  console.log(`   Listening on port: ${PORT}`);
-});
-
+if (require.main === module) {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Server running in ${process.env.NODE_ENV || 'development'} mode`);
+    console.log(`   Listening on port: ${PORT}`);
+  });
+}
+module.exports = app;

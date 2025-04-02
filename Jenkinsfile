@@ -2,7 +2,8 @@ pipeline {
     agent any
 
     environment {
-        // You can define environment variables here if needed
+        // Define environment variables if needed
+        EMAIL_RECIPIENT = 'thandiethalma@gmail.com'
     }
 
     stages {
@@ -22,29 +23,32 @@ pipeline {
                 }
             }
         }
-
+        
+        stage('Run Tests') {
+            steps {
+                script {
+                    try {
+                        sh 'npm test'
+                    } catch (err) {
+                        // Send an email notification if tests fail
+                        mail to: "${env.EMAIL_RECIPIENT}",
+                             subject: "Jenkins: Tests failed for Gallery project",
+                             body: "The test stage failed during the build. Please check the Jenkins logs for more details."
+                        // Re-throw the error to mark the build as failed
+                        error "Tests failed, stopping pipeline."
+                    }
+                }
+            }
+        }
+        
         stage('Build and Deploy') {
             steps {
                 script {
+                    // Optionally, start your server in the background
                     sh 'node server.js &'
                 }
             }
         }
-
-        // stage('Test Execution') {
-        //     steps {
-        //         script {
-        //             try {
-        //                 sh 'npm test'
-        //             } catch (Exception e) {
-        //                 mail to: 'thandiethalma@gmail.com',
-        //                      subject: 'Test Failed in Jenkins Pipeline',
-        //                      body: 'Tests have failed. Check Jenkins logs for details.'
-        //                 error('Tests failed. Stopping pipeline.')
-        //             }
-        //         }
-        //     }
-        // }
 
         stage('Deploy to Render') {
             steps {
