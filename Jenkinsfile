@@ -3,8 +3,8 @@ pipeline {
 
     environment {
         EMAIL_RECIPIENT = 'thandiethalma@gmail.com'
-        SLACK_WEBHOOK_URL = 'https://hooks.slack.com/services/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'
-        // Replace the URL below with your actual Render URL
+        SLACK_WEBHOOK_URL = 'https://hooks.slack.com/services/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'
+        // Replace this with your actual Render deployed site URL.
         RENDER_URL = 'https://your-app.render.com'
     }
 
@@ -46,7 +46,7 @@ pipeline {
         stage('Build and Deploy') {
             steps {
                 script {
-                    // Optionally, start your server in the background (if needed)
+                    // Optionally, start your server in the background
                     sh 'node server.js &'
                 }
             }
@@ -65,13 +65,12 @@ pipeline {
         stage('Notify Slack') {
             steps {
                 script {
-                    // Build the Slack message
-                    def slackMessage = """
-                    {
-                      "text": "Build *#${env.BUILD_ID}* has been successfully deployed! View the site here: ${env.RENDER_URL}"
-                    }
-                    """
-                    // Send the Slack message using curl
+                    // Build the Slack message including the build ID and Render URL.
+                    def slackMessage = """{
+                        "text": "Build *#${env.BUILD_ID}* has been successfully deployed!\\nView the site here: ${env.RENDER_URL}"
+                    }"""
+                    
+                    // Send the Slack message using curl.
                     sh "curl -X POST -H 'Content-type: application/json' --data '${slackMessage}' ${env.SLACK_WEBHOOK_URL}"
                 }
             }
