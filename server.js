@@ -51,10 +51,9 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Start server (CRITICAL FIX for Render)
 const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server running in ${process.env.NODE_ENV || 'development'} mode`);
-  console.log(`   Access URLs: http://localhost:${PORT} (local)`);
-  console.log(`               http://0.0.0.0:${PORT} (network)`);
+  console.log(`   Listening on port: ${PORT}`);
 });
