@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         EMAIL_RECIPIENT = 'thandiethalma@gmail.com'
-        SLACK_WEBHOOK_URL = 'https://hooks.slack.com/services/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'
+        SLACK_WEBHOOK_URL = 'https://hooks.slack.com/services/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'
         // Replace the URL below with your actual Render URL
         RENDER_URL = 'https://your-app.render.com'
     }
