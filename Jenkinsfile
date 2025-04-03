@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         EMAIL_RECIPIENT = 'thandiethalma@gmail.com'
-        SLACK_WEBHOOK_URL = 'https://hooks.slack.com/services/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'
+        SLACK_WEBHOOK_URL = 'https://hooks.slack.com/services/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'
         
         RENDER_URL = 'https://gallery-2g28.onrender.com'
     }
